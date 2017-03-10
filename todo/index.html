@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>vue-todo</title>
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+  <script src="lib/vue.min.js"></script>
+  <script>
+    window.onload = function(){
+        // import $ from 'jquery';
+         var vm = new Vue({
+          el:'#box',
+          data:{
+              myData:[],
+              name:'',
+              age:'',
+              nowIndex:-100
+          },
+          methods:{
+            add:function(){
+                this.myData.push({
+                  name:this.name,
+                  age:this.age
+                });
+                this.name="";
+                this.age="";
+            },
+            deleteMsg:function(n){
+
+                if(n == -2){
+                   this.myData=[];
+                }else{
+                  this.myData.splice(n,1);
+                }
+          }
+          }
+         })
+    }
+  </script>
+</head>
+<body>
+   <div class="container" id="box">
+     <form role="form">
+       <div class="form-group">
+         <label for="username">用户名</label>
+         <input type="text" id="username" class="form-control" placeholder="输入用户名" v-model="name">
+       </div>
+       <div class="form-group">
+         <label for="age">年龄</label>
+         <input type="text" id="age" class="form-control" placeholder="输入年龄" v-model="age">
+       </div>
+       <div class="from-group">
+         <input type="button" value="添加" class="btn btn-primary btn-sm" v-on:click="add">
+         <input type="reset" value="重置" class="btn btn-danger btn-sm">
+       </div>
+     </form>
+
+     <hr>
+     <table class="table table-hover">
+       <caption class="h2 text-info text-center">
+         用户信息表
+       </caption>
+       <tr>
+         <th class=" text-center">序号</th>
+         <th class=" text-center">名字</th>
+         <th class=" text-center">年龄</th>
+         <th class=" text-center">操作</th>
+       </tr>
+       <tr class="text-center" v-for="(item,index) in myData">
+         <td>{{index+1}}</td>
+         <td>{{item.name}}</td>
+         <td>{{item.age}}</td>
+         <td class="text-center">
+          <input type="button" value="删除" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#layer" v-on:click="nowIndex=index">
+         </td>
+       </tr>
+
+
+       <tr v-show="myData.length != 0">
+           <td colspan="4" class="text-right">
+             <button data-toggle="modal" data-target="#layer"  class="btn btn-primary" @click="nowIndex=-2">删除全部</button>
+           </td>
+       </tr>
+       <tr v-show="myData.length == 0">
+           <td colspan="4" class="text-center">
+             暂无数据...
+           </td>
+       </tr>
+     </table>
+     <!-- 弹出框 -->
+    <div id="layer" role="dialog" class="modal fade" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+               <button class="close" data-dismiss="modal">
+                 <span>&times;</span>
+               </button>
+               <h4 class="modal-title">确认删除吗？</h4>
+          </div>
+          <div class="modal-body text-right">
+            <button class="btn btn-danger btn-sm" data-dismiss="modal" v-on:click="deleteMsg(nowIndex)">确认</button>
+            <button class="btn btn-primary btn-sm" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+   </div>
+</body>
+</html>
